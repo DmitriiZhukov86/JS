@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+    <h2>Заголовок</h2>
+    <p>Абзац</p>
+    <p>Абзац</p>
+    <p>Абзац</p>
+
+<script>
+   
+  let p = document.body.querySelectorAll("p");
+  console.log(p);
+    for (let i =  0; i < p.length; i++) {
+        p[i].innerText = i+1;
+    }
+
+
+
+</script>
+</body>  
+
+
+</html>

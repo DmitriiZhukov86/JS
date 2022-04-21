@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+
+<body>
+
+     <!-- По клику на кнопку с *id* показывать таб "*id*-content" -->
+     <ul class="tabs" id="tabs">
+        <li class="tab-item">
+          <button class="tab-button active" id="home" type="button">Home</button>
+        </li>
+        <li class="tab-item">
+          <button class="tab-button" id="profile" type="button">Profile</button>
+        </li>
+        <li class="tab-item" role="presentation">
+          <button class="tab-button" id="contact" type="button">Contact</button>
+        </li>
+      </ul>
+  
+      <div>
+        <div class="tab-content active" id="home-content">Home content</div>
+        <div class="tab-content" id="profile-content">Profile content</div>
+        <div class="tab-content" id="contact-content">Contact content</div>
+      </div>
+  
+    <script>
+      
+        let tabs = document.querySelector(".tabs");
+
+        tabs.onclick = function(event) {
+            let li = event.target.tagName("li")
+            highlight(target);
+        }
+
+        function highlight()
+
+    </script>
+  
+  </body>
+</html>

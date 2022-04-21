@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    .field {
+    background-color: green;
+    width: 400px;
+    height: 400px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+    position: relative;  
+    
+    }
+    .ball {
+        position:absolute;
+      bottom: 15px;
+      right: 15px;
+      transition: all 1s;
+    }
+    </style>
+</head>
+
+<body>
+
+        <div class="field"> 
+            <img class="ball" src="ball.svg" width="90" height="120">
+        </div>
+       
+    <script>
+      
+    let field = document.querySelector(".field");
+    let ball = document.querySelector(".ball");
+
+    function del() {
+    ball.remove();
+   }
+
+    function add() {
+      let ballPlace = {
+        x: event.clientX,
+        y: event.clientY
+      }
+
+      field.insertAdjacentElement("ballPlace", ball);
+
+    }
+
+    field.addEventListener("click", del);
+    field.addEventListener("click", add);
+
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+    
+<script> 
+let ul = document.createElement('ul');
+document.body.append(ul);
+let liText = "";
+do {
+ let li = document.createElement('li');
+ liText = prompt("введите элемент");
+li.textContent = liText;
+ ul.append(li)
+}
+while (liText !== null && liText !== "");
+
+</script> 
+
+</body>  
+
+</html>
