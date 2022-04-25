@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    <style>
+        .slider { 
+            position: relative;
+            background-color: gainsboro;
+            width: 100%;
+            height: 300px;
+        }
+        .slider-wrapper {
+            position: relative;
+        }
+        .slider-item {
+            background-color: gainsboro;
+            position: absolute;
+            width: 100%;
+            height: 300px;
+            font-size: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s;
+        }
+        .slider-prev {
+            position: absolute;
+            font-size: 30px;
+            margin-top: 130px;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+        .slider-next {
+            position: absolute;
+            font-size: 30px;
+            margin-top: 130px;
+            margin-left: 96%;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+        .slider-pagination {
+            position: absolute;
+            margin-left: 48%;
+            margin-top: 250px;
+        }
+
+    </style>
+</head>
+     
+<body>
+        
+        <div class="slider">
+        <div class="slider-wrapper">
+            <div class="slider-item">Slide 1</div>
+            <div class="slider-item">Slide 2</div>
+            <div class="slider-item">Slide 3</div>
+            <div class="slider-item">Slide 4</div>
+        </div>
+          <button class="slider-prev" type="button"><</button>
+          <button class="slider-next" type="button">></button>
+          <span class="slider-pagination"></span>
+        </div>
+      
+    <script>
+            let sliderPrev = document.querySelector(".slider-prev");
+            let sliderNext = document.querySelector(".slider-next");
+            let sliderPagination = document.querySelector(".slider-pagination");
+            let slides = document.querySelectorAll(".slider-item");
+
+            sliderNext.addEventListener("click", function() {
+                for(i = 0; i < slides.length - 1; i++) {
+                    slides[i-1].style.display = "none";
+                    slides[i].style.display = "block";
+                };
+        
+                sliderPagination.textContent = '${i+1}/${slides.length}';
+            });
+
+            sliderPrev.addEventListener("click", function() {
+                for(i = slides.length; i > 0; i--) {
+                    slides[i].style.display = "none";
+                    slides[i-1].style.display = "block";
+                };
+                   
+                sliderPagination.textContent = '${i+1}/${slides.length}';
+            });
+
+    </script>
+
+</body>
+
+</html>
