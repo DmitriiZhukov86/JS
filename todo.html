@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .header {
+            background-color: #198da2;
+            padding: 10px 40px 30px;
+            color: white;
+            text-align: center;
+        }
+        .form-input {
+            width: 200px;
+            height: 30px;
+            font-size: 15px;
+            border: none;
+            padding-left: 10px;
+        }
+        .form-button {
+            width: 80px;
+            height: 32px;
+            font-size: 15px;
+            border: none;
+            text-align: center;
+            color: #555;
+        }
+        .form {
+            display: flex;
+            justify-content: center;
+        }
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+        ul li {
+            background: #eee;
+            font-size: 20px;
+            padding: 10px 0px 10px 50px;
+        }
+    </style>
+  </head>
+  
+  <body>
+    <div class="header">
+      <h2>Список дел</h2>
+      <form id="add-form" class="form">
+        <input type="text" id="add-input" class="form-input" placeholder="Введите название">
+        <button type="submit" class="form-button">Добавить</и>
+      </form>
+    </div>
+    
+    <ul id="list">
+      <li>Покормить кота</li>
+      <li class="checked">Купить молоко</li>
+      <li>Выкинуть мусор</li>
+      <li>Сделать зарядку</li>
+
+    <script>
+        let formInput = document.querySelector(".form-input");
+        let formButton = document.querySelector(".form-button");
+        let form = document.querySelector(".form");
+        let list = document.querySelector("#list");
+        let listDo = document.getElementsByTagName("li");
+
+
+        form.addEventListener("submit", function() {
+            let text = document.createTextNode("formInput")
+            list.insertAdjacentHTML('beforeend', 'text');
+        })
+
+        
+
+    </script>
+
+  </body>
+</html>
