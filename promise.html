@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <body>
+
+        <button type="submit" class="button">Сдать экзамен</button>
+        
+       <script> 
+       
+      // function delay(ms) {
+      // return new Promise((resolve) => {
+      // setTimeout(() => resolve(), ms) })
+      // }
+        
+        
+      //  delay(3000).then(() => alert("выполнилось через 3 секунды"))
+      //              .catch(() => alert('облом'));
+      
+
+        let button = document.querySelector(".button");
+
+        function getRandomInRange(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        button.onclick = function() {
+          let score = getRandomInRange(1, 5);
+          console.log(score)
+          document.body.innerText = "Определяем оценку...";
+          return new Promise(resolve => {
+            setTimeout(() => {
+            if (score === 1 || score === 2) {
+              alert("Увы, вы получили оценку 2!")
+            } else {
+              alert("Ура! Вы сдали экзамен на 4!")
+            }
+          }, 2000);
+          });
+          }
+      
+        </script>
+
+        </body>
+
+</html>

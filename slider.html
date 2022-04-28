@@ -71,24 +71,26 @@
             let sliderNext = document.querySelector(".slider-next");
             let sliderPagination = document.querySelector(".slider-pagination");
             let slides = document.querySelectorAll(".slider-item");
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                for (let slide of slides) {
+                    slide.style.display = "none"
+                }
+                slides[index].style.display = "block";
+                sliderPagination.textContent = `${index+1}/${slides.length}`;
+            }
+
+            showSlide(currentIndex);
 
             sliderNext.addEventListener("click", function() {
-                for(i = 0; i < slides.length - 1; i++) {
-                    slides[i].style.display = "none";
-                    slides[i+1].style.display = "block";
-
-                    sliderPagination.textContent = '${i+1}/${slides.length}';
-                    console.log(i)
-                };
+                currentIndex = currentIndex < slides.length - 1 ? currentIndex + 1 : 0;
+                showSlide(currentIndex);
             });
 
             sliderPrev.addEventListener("click", function() {
-                for(i = slides.length - 1; i >= 0; i--) {
-                    slides[i-1].style.display = "none";
-                    slides[i].style.display = "block";
-                };
-                   
-                sliderPagination.textContent = '${i+1}/${slides.length}';
+                currentIndex = currentIndex > 0 ? currentIndex - 1 : slides.length - 1;
+                showSlide(currentIndex);
             });
 
     </script>

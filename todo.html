@@ -51,7 +51,7 @@
       <h2>Список дел</h2>
       <form id="add-form" class="form">
         <input type="text" id="add-input" class="form-input" placeholder="Введите название">
-        <button type="submit" class="form-button">Добавить</и>
+        <button type="submit" class="form-button">Добавить</button>
       </form>
     </div>
     
@@ -71,10 +71,10 @@
 
         form.addEventListener("submit", function() {
             let text = document.createTextNode("formInput")
-            list.insertAdjacentHTML('beforeend', 'text');
+            list.insertAdjacentHTML('beforeend', text);
         })
 
-        
+
 
     </script>
 
