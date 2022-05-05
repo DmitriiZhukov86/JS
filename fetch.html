@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <body>
+        
+        <div>
+            <form id="form">
+              <input id="input" type="text" placeholder="Введите имя юзера">
+            </form>
+        </div>
+
+       <script> 
+
+       let form = document.querySelector("#form");
+
+       form.addEventListener("submit", function(event) {
+           event.preventDefault()
+       fetch('https://api.github.com/users/DmitriiZhukov86')
+        .then((response) => response.json())
+        .then((data) => {
+            let userId = document.createElement("div");
+            userId.textContent = data.id;
+            document.body.append(userId);
+            console.log(data)
+
+            let login = document.createElement("div");
+            login.textContent = data.login;
+            document.body.append(login);
+            
+            let photo = document.createElement("img")
+            img.src = data.avatar_url;
+            document.body.append(photo);
+        })
+        
+        })
+      
+        </script>
+
+        </body>
+
+</html>

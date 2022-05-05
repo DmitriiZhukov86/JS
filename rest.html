@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+          }
+          
+          .book-item {
+            border: 1px solid #eee;
+            padding: 30px 0;
+          }
+          
+          .modal {
+            background: #fff;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            visibility: hidden;
+          }          
+        </style>
+        </head>
+
+      <body>
+        
+        <div>
+            <h1>Электронная библиотека</h1>
+            <h2>Добавление книги</h2>
+            <form class="add-book-form">
+              <input
+                type="text"
+                value=""
+                class="book-author-input"
+                placeholder="Автор книги"
+              />
+              <input
+                type="text"
+                value=""
+                class="book-title-input"
+                placeholder="Название книги"
+              />
+              <input 
+                type="file" 
+                name="cover" 
+                id="cover" />
+              <button type="submit">Добавить</button>
+            </form>
+          </div>
+      
+          <h2>Список книг</h2>
+          <div class="books-list"></div>
+      
+          <div class="modal update-book-modal">
+            <div>
+              <h2>Редактирование книги</h2>
+              <form class="update-book-form">
+                <input type="hidden" value="" class="book-id-input" />
+                <input
+                  type="text"
+                  value=""
+                  class="book-author-input"
+                  placeholder="Автор книги"
+                />
+                <input
+                  type="text"
+                  value=""
+                  class="book-title-input"
+                  placeholder="Название книги"
+                />
+                <button type="submit">Обновить</button>
+                <button type="button" class="cancel-button">Отмена</button>
+              </form>
+            </div>
+          </div>
+
+       <script> 
+
+       let booksList = document.querySelector(".books-list");
+       booksList.textContent = "";
+
+       function updateBooksList() {
+       fetch('https://nordic-books-api.herokuapp.com/books')
+        .then((response) => response.json())
+         .then((data) => {
+             data.forEach(book => {
+                const bookId = document.createElement("div");
+           bookId.textContent = book._id;
+           document.body.append(bookId);
+
+           const bookTitle = document.createElement("div");
+            bookTitle.textContent = book.title;
+            document.body.append(bookTitle);
+            
+            const bookAuthor = document.createElement("div");
+            bookAuthor.textContent = book.author;
+            document.body.append(bookAuthor);
+
+            booksList.prepend(bookAuthor, bookTitle, bookId);
+             });         
+         })
+         }
+
+        updateBooksList();
+
+         let addBookForm = document.querySelector(".add-book-form");
+         let bookAuthorInput = document.querySelector(".book-author-input");
+         let bookTitleInput = document.querySelector(".book-title-input");
+
+         addBookForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let author = bookAuthorInput.value;
+            let title = bookTitleInput.value;
+         fetch("https://nordic-books-api.herokuapp.com/books", {
+         method: "POST",
+        body: JSON.stringify({
+            author,
+            title;
+        }), 
+         headers: {
+         "Content-type": "application/json",
+        },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+        bookAuthorInput.value = "";
+        bookTitleInput.value = "";
+         })
+        })
+
+
+
+
+        booksList.addEventListener("click", function(event) {
+            event.preventDefault();
+            let author = bookAuthorInput.value;
+            let title = bookTitleInput.value;
+         fetch("https://nordic-books-api.herokuapp.com/books", {
+         method: "DELETE",
+        body: JSON.stringify({
+            author,
+            title;
+        }), 
+         headers: {
+         "Content-type": "application/json",
+        },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+        bookAuthorInput.value = "";
+        bookTitleInput.value = "";
+         })
+        })
+
+
+        let cover = document.querySelector("#cover");
+        
+        cover.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData()
+        formData.append('author', author)
+        formData.append('title', title)
+        formData.append('cover', cover.files[0])
+
+        fetch(`${apiUrl}/books`, {
+          method: 'POST',
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            updateBooksList()
+            // addBookTitleInput.value = ''
+            // addBookAuthorInput.value = ''
+          })
+        })
+
+        </script>
+
+        </body>
+
+</html>
