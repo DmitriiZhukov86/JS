@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Электронная библиотека</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .book-item {
+        border: 1px solid #eee;
+        padding: 30px 0;
+      }
+
+      .modal {
+        background: #fff;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 offset-4">
+          <div>
+            <h1 class="mb-4">Электронная библиотека</h1>
+
+            <div class="card mb-4">
+              <div class="card-body">
+                <h2>Добавление книги</h2>
+                <form class="add-book-form">
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      value=""
+                      class="form-control book-author-input"
+                      placeholder="Автор книги"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      value=""
+                      class="form-control book-title-input"
+                      placeholder="Название книги"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <input type="file" name="cover" id="cover" />
+                  </div>
+                  <button class="btn btn-primary" type="submit">
+                    Добавить
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <h2>Список книг</h2>
+          <div class="books-list"></div>
+
+          <div class="modal fade update-book-modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2>Редактирование книги</h2>
+                  <div class="modal-body">
+                    <form class="update-book-form">
+                      <input type="hidden" value="" class="book-id-input" />
+                      <div class="mb-2">
+                        <input
+                          type="text"
+                          value=""
+                          class="form-control book-author-input"
+                          placeholder="Автор книги"
+                        />
+                      </div>
+                      <div class="mb-2">
+                        <input
+                          type="text"
+                          value=""
+                          class="form-control book-title-input"
+                          placeholder="Название книги"
+                        />
+                      </div>
+                      <button class="btn btn-primary" type="submit">
+                        Обновить
+                      </button>
+                      <button
+                        class="btn btn-secondary cancel-button"
+                        type="button"
+                      >
+                        Отмена
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const apiUrl = 'https://nordic-books-api.herokuapp.com'
+      // const apiUrl = 'http://localhost:3000'
+      const userId = ''
+
+      const booksList = document.querySelector('.books-list')
+
+      const addBookForm = document.querySelector('.add-book-form')
+      const addBookTitleInput = addBookForm.querySelector('.book-title-input')
+      const addBookAuthorInput = addBookForm.querySelector('.book-author-input')
+
+      var updateBookModal = new bootstrap.Modal(
+        document.querySelector('.update-book-modal')
+      )
+      const updateBookForm = document.querySelector('.update-book-form')
+      const updateBookIdInput = updateBookForm.querySelector('.book-id-input')
+      const updateBookTitleInput =
+        updateBookForm.querySelector('.book-title-input')
+      const updateBookAuthorInput =
+        updateBookForm.querySelector('.book-author-input')
+      const updateBookCancelButton =
+        updateBookForm.querySelector('.cancel-button')
+
+      // function getBooksData() {
+      //   return fetch(`${apiUrl}/books`, {
+      //     headers: { 'user-id': userId },
+      //   }).then((res) => res.json())
+      // }
+
+      async function getBooksData() {
+        const res = await fetch(`${apiUrl}/books`, {
+          headers: { 'user-id': userId },
+        })
+        return res.json()
+      }
+
+      function updateBooksList() {
+        getBooksData().then(({ data: books }) => {
+          if (!Array.isArray(books)) {
+            return
+          }
+
+          booksList.textContent = ''
+          books.forEach((book) => {
+            booksList.insertAdjacentHTML(
+              'beforeEnd',
+              `
+              <div class="card mb-2">
+                <div class="card-body book-item">
+                  <div>${book.author}</div>
+                  <div>${book.title}</div>
+                  ${
+                    book.imageUrl
+                      ? `<img class="mb-2" style="max-width: 200px" src="${book.imageUrl}"/>`
+                      : ''
+                  }
+                  <div>
+                    <button class="btn btn-danger book-item-delete" data-book-id="${
+                      book._id
+                    }">Удалить</button>
+                    <button class="btn btn-primary book-item-edit" data-book-id="${
+                      book._id
+                    }">Редактировать</button>
+                    <button class="btn btn-primary book-item-comments" data-book-id="${
+                      book._id
+                    }">Показать комментарии</button>
+                    </div>
+                  </div>
+              </div>
+            `
+            )
+          })
+        })
+      }
+
+      function updateComments(bookId) {
+        const commentsElement = document.querySelector(
+          `.comments[data-book-id="${bookId}"]`
+        )
+
+        fetch(`${apiUrl}/books/${bookId}/comments`)
+          .then((res) => res.json())
+          .then(({ data }) => {
+            if (data && data.length > 0) {
+              commentsElement.textContent = ''
+              commentsElement.insertAdjacentHTML(
+                'afterBegin',
+                '<h4>Комментарии</h4>'
+              )
+              data.forEach((comment) => {
+                commentsElement.insertAdjacentHTML(
+                  'beforeEnd',
+                  `<div>${comment.name}</div><div>${comment.text}</div>`
+                )
+              })
+              return
+            }
+            commentsElement.insertAdjacentHTML(
+              'afterBegin',
+              '<h4>Комментариев пока нет</h4>'
+            )
+          })
+      }
+
+      // Инициализация
+      updateBooksList()
+
+      // Добавление книги
+      addBookForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        const author = addBookAuthorInput.value
+        const title = addBookTitleInput.value
+
+        const formData = new FormData()
+        formData.append('author', author)
+        formData.append('title', title)
+        formData.append('cover', cover.files[0])
+
+        fetch(`${apiUrl}/books`, {
+          method: 'POST',
+          headers: { 'user-id': userId },
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            updateBooksList()
+            // addBookTitleInput.value = ''
+            // addBookAuthorInput.value = ''
+          })
+      })
+
+      // Удаление книги
+      booksList.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('book-item-delete')) {
+          return
+        }
+
+        const bookId = event.target.dataset.bookId
+        fetch(`${apiUrl}/books/${bookId}`, {
+          method: 'DELETE',
+        }).then(() => {
+          updateBooksList()
+        })
+      })
+
+      // Редактирование
+      booksList.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('book-item-edit')) {
+          return
+        }
+
+        const bookId = event.target.dataset.bookId
+        updateBookModal.show()
+
+        fetch(`${apiUrl}/books/${bookId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            updateBookIdInput.value = data._id
+            updateBookAuthorInput.value = data.author
+            updateBookTitleInput.value = data.title
+          })
+      })
+
+      updateBookForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        const bookId = updateBookIdInput.value
+        const author = updateBookAuthorInput.value
+        const title = updateBookTitleInput.value
+
+        fetch(`${apiUrl}/books/${bookId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author,
+            title,
+          }),
+        }).then(() => {
+          updateBooksList()
+          closeUpdateModal()
+        })
+      })
+
+      function closeUpdateModal() {
+        updateBookAuthorInput.value = ''
+        updateBookTitleInput.value = ''
+        updateBookIdInput.value = ''
+
+        updateBookModal.hide()
+      }
+
+      updateBookCancelButton.addEventListener('click', closeUpdateModal)
+
+      // Показать комментарии
+      const commentsForm = document.createElement('form')
+      commentsForm.id = 'comments-form'
+      commentsForm.insertAdjacentHTML(
+        'afterBegin',
+        `
+        <h4 class="mt-4">Добавить новый комментарий</h4>
+        <div>
+          <input type="text" class="comment-name-input" placeholder="Ваше имя"/>
+        </div>
+        <div>
+          <textarea class="comment-text-input" placeholder="Ваш комментарий"></textarea>
+        </div>
+        <button type="submit">Отправить</button>
+      `
+      )
+
+      booksList.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('book-item-comments')) {
+          return
+        }
+
+        const bookId = event.target.dataset.bookId
+        const bookItem = event.target.closest('.book-item')
+
+        const commentsBlock = bookItem.querySelector('.comments')
+        if (commentsBlock) {
+          commentsBlock.remove()
+          commentsForm.remove()
+          event.target.textContent = 'Показать комментарии'
+        } else {
+          commentsForm.dataset.bookId = bookId
+          const commentsDiv = document.createElement('div')
+          commentsDiv.classList.add('comments')
+          commentsDiv.dataset.bookId = bookId
+          bookItem.append(commentsDiv)
+          bookItem.append(commentsForm)
+          event.target.textContent = 'Скрыть комментарии'
+
+          updateComments(bookId)
+        }
+      })
+
+      commentsForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        const name = commentsForm.querySelector('.comment-name-input').value
+        const text = commentsForm.querySelector('.comment-text-input').value
+        const bookId = commentsForm.dataset.bookId
+
+        if (name && text) {
+          fetch(`${apiUrl}/books/${bookId}/comments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              text,
+            }),
+          }).then(() => {
+            updateComments(bookId)
+          })
+        }
+      })
+    </script>
+  </body>
+</html>
