@@ -1,189 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-          }
-          
-          .book-item {
-            border: 1px solid #eee;
-            padding: 30px 0;
-          }
-          
-          .modal {
-            background: #fff;
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            visibility: hidden;
-          }          
-        </style>
-        </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Электронная библиотека</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
 
-      <body>
-        
-        <div>
-            <h1>Электронная библиотека</h1>
+      .book-item {
+        border: 1px solid #eee;
+        padding: 30px 0;
+      }
+
+      .modal {
+        background: #fff;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div>
+        <h1 class="mb-4">Электронная библиотека</h1>
+        <div class="card mb-4">
+          <div class="card-body">
             <h2>Добавление книги</h2>
             <form class="add-book-form">
-              <input
-                type="text"
-                value=""
-                class="book-author-input"
-                placeholder="Автор книги"
-              />
-              <input
-                type="text"
-                value=""
-                class="book-title-input"
-                placeholder="Название книги"
-              />
-              <input 
-                type="file" 
-                name="cover" 
-                id="cover" />
-              <button type="submit">Добавить</button>
-            </form>
-          </div>
-      
-          <h2>Список книг</h2>
-          <div class="books-list"></div>
-      
-          <div class="modal update-book-modal">
-            <div>
-              <h2>Редактирование книги</h2>
-              <form class="update-book-form">
-                <input type="hidden" value="" class="book-id-input" />
+              <div class="mb-2">
                 <input
                   type="text"
                   value=""
-                  class="book-author-input"
+                  class="form-control book-author-input"
                   placeholder="Автор книги"
                 />
+              </div>
+              <div class="mb-2">
                 <input
                   type="text"
                   value=""
-                  class="book-title-input"
+                  class="form-control book-title-input"
                   placeholder="Название книги"
                 />
-                <button type="submit">Обновить</button>
-                <button type="button" class="cancel-button">Отмена</button>
-              </form>
-            </div>
+              </div>
+              <div class="mb-2">
+                <input type="file" name="cover" id="cover" />
+              </div>
+              <button class="btn btn-primary" type="submit">Добавить</button>
+            </form>
           </div>
+        </div>
+      </div>
 
-       <script> 
+      <h2>Список книг</h2>
+      <div class="books-list"></div>
 
-       let booksList = document.querySelector(".books-list");
-       booksList.textContent = "";
+      <div class="modal update-book-modal">
+        <div>
+          <h2>Редактирование книги</h2>
+          <form class="update-book-form">
+            <input type="hidden" value="" class="book-id-input" />
+            <div class="mb-2">
+              <input
+                type="text"
+                value=""
+                class="form-control book-author-input"
+                placeholder="Автор книги"
+              />
+            </div>
+            <div class="mb-2">
+              <input
+                type="text"
+                value=""
+                class="form-control book-title-input"
+                placeholder="Название книги"
+              />
+            </div>
+            <button class="btn btn-primary" type="submit">Обновить</button>
+            <button class="btn btn-secondary cancel-button" type="button">
+              Отмена
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
 
-       function updateBooksList() {
-       fetch('https://nordic-books-api.herokuapp.com/books')
-        .then((response) => response.json())
-         .then((data) => {
-             data.forEach(book => {
-                const bookId = document.createElement("div");
-           bookId.textContent = book._id;
-           document.body.append(bookId);
+    <script>
+      //Вывод книг
+      let booksList = document.querySelector('.books-list')
+      booksList.textContent = ''
 
-           const bookTitle = document.createElement("div");
-            bookTitle.textContent = book.title;
-            document.body.append(bookTitle);
-            
-            const bookAuthor = document.createElement("div");
-            bookAuthor.textContent = book.author;
-            document.body.append(bookAuthor);
+      function updateBooksList() {
+        fetch('https://nordic-books-api.herokuapp.com/books')
+          .then((response) => response.json())
+          .then((books) => {
+            books.data.forEach((book) => {
+              const bookId = document.createElement('div')
+              bookId.textContent = book._id
+              document.body.append(bookId)
 
-            booksList.prepend(bookAuthor, bookTitle, bookId);
-             });         
-         })
-         }
+              const bookTitle = document.createElement('div')
+              bookTitle.textContent = book.title
+              document.body.append(bookTitle)
 
-        updateBooksList();
+              const bookAuthor = document.createElement('div')
+              bookAuthor.textContent = book.author
+              document.body.append(bookAuthor)
 
-         let addBookForm = document.querySelector(".add-book-form");
-         let bookAuthorInput = document.querySelector(".book-author-input");
-         let bookTitleInput = document.querySelector(".book-title-input");
+              const bookImage = document.createElement('img')
+              bookImage.src = book.imageUrl
+              document.body.append(bookImage)
 
-         addBookForm.addEventListener("submit", function(event) {
-            event.preventDefault();
-            let author = bookAuthorInput.value;
-            let title = bookTitleInput.value;
-         fetch("https://nordic-books-api.herokuapp.com/books", {
-         method: "POST",
-        body: JSON.stringify({
-            author,
-            title;
-        }), 
-         headers: {
-         "Content-type": "application/json",
-        },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-        bookAuthorInput.value = "";
-        bookTitleInput.value = "";
-         })
-        })
+              booksList.prepend(bookAuthor, bookTitle, bookId, bookImage)
+            })
+          })
+      }
 
+      updateBooksList()
 
+      //Добавить книгу
+      let addBookForm = document.querySelector('.add-book-form')
+      let bookAuthorInput = document.querySelector('.book-author-input')
+      let bookTitleInput = document.querySelector('.book-title-input')
 
-
-        booksList.addEventListener("click", function(event) {
-            event.preventDefault();
-            let author = bookAuthorInput.value;
-            let title = bookTitleInput.value;
-         fetch("https://nordic-books-api.herokuapp.com/books", {
-         method: "DELETE",
-        body: JSON.stringify({
-            author,
-            title;
-        }), 
-         headers: {
-         "Content-type": "application/json",
-        },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-        bookAuthorInput.value = "";
-        bookTitleInput.value = "";
-         })
-        })
-
-
-        let cover = document.querySelector("#cover");
-        
-        cover.addEventListener("submit", function(event) {
-        event.preventDefault();
+      let cover = document.querySelector('#cover')
+      addBookForm.addEventListener('submit', function (event) {
+        event.preventDefault()
+        let author = bookAuthorInput.value
+        let title = bookTitleInput.value
         const formData = new FormData()
         formData.append('author', author)
         formData.append('title', title)
         formData.append('cover', cover.files[0])
-
-        fetch(`${apiUrl}/books`, {
+        fetch('https://nordic-books-api.herokuapp.com/books', {
           method: 'POST',
+
           body: formData,
         })
           .then((res) => res.json())
           .then((data) => {
             updateBooksList()
-            // addBookTitleInput.value = ''
-            // addBookAuthorInput.value = ''
           })
+      })
+
+      //Удаление книги
+      booksList.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('book-item-delete')) {
+          return
+        }
+        const bookId = event.target.dataset.bookId
+        fetch('https://nordic-books-api.herokuapp.com/books', {
+          method: 'DELETE',
+        }).then(() => {
+          updateBooksList()
         })
+      })
 
-        </script>
+      //Редактирование книги
+      const updateBookModal = document.querySelector('.update-book-modal')
+      const updateBookForm = document.querySelector('.update-book-form')
+      const updateBookIdInput = updateBookForm.querySelector('.book-id-input')
+      const updateBookTitleInput =
+        updateBookForm.querySelector('.book-title-input')
+      const updateBookAuthorInput =
+        updateBookForm.querySelector('.book-author-input')
+      const updateBookCancelButton =
+        updateBookForm.querySelector('.cancel-button')
 
-        </body>
+      booksList.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('book-item-edit')) {
+          return
+        }
 
+        const bookId = event.target.dataset.bookId
+        updateBookModal.style.visibility = 'visible'
+
+        fetch(`${apiUrl}/books/${bookId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            updateBookIdInput.value = data._id
+            updateBookAuthorInput.value = data.author
+            updateBookTitleInput.value = data.title
+          })
+      })
+
+      updateBookForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        const bookId = updateBookIdInput.value
+        const author = updateBookAuthorInput.value
+        const title = updateBookTitleInput.value
+
+        fetch(`${apiUrl}/books/${bookId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author,
+            title,
+          }),
+        }).then(() => {
+          updateBooksList()
+          closeUpdateModal()
+        })
+      })
+
+      function closeUpdateModal() {
+        updateBookAuthorInput.value = ''
+        updateBookTitleInput.value = ''
+        updateBookIdInput.value = ''
+
+        updateBookModal.style.visibility = 'hidden'
+      }
+
+      updateBookCancelButton.addEventListener('click', closeUpdateModal)
+    </script>
+  </body>
 </html>
